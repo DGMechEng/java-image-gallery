@@ -17,6 +17,8 @@ repositories {
 }
 
 dependencies {
+    implementation platform('software.amazon.awssdk:bom:2.15.0')
+    implementation 'software.amazon.awssdk:s3'
     // Use JUnit test framework.
     testImplementation 'junit:junit:4.13.2'
 
