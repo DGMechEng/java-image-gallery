@@ -1,0 +1,68 @@
+package edu.au.cc.gallery;
+
+import java.lang.System;
+import java.lang.Exception;
+import java.util.NoSuchElementException;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+import java.sql.SQLException;
+
+
+public class UserAdmin {
+    public static void prompt() {
+
+	Scanner in = new Scanner(System.in);
+	System.out.println("Select a database operation:\n"                                                            
+                     + "1) List users\n" + "2) Add user\n"                                                                           
+                     + "3) Edit user\n" + "4) Delete user\n"                                                                         
+			   + "5) Quit");
+	int a = 0;
+
+	while (a < 1 || a > 5) {
+	    try {
+	    System.out.print("Enter command> ");
+	    a = in.nextInt();
+	    } catch (InputMismatchException ix) {
+		System.out.print("Enter integer values only");
+	    }
+	}
+	System.out.println("You entered " + a);	
+	//int a = 1;
+
+	//try {
+	//	DB.demo(a, null, null, null);
+	//	} catch (Exception ex) {
+	//	    ex.printStackTrace();
+	//	}
+
+	//int b = 2;
+	//String username = "Freddy";
+	//String password = "Champions";
+	//String full_name = "Freddy Mercury";
+	
+	//try {
+	//DB.demo(b,username, password, full_name);
+	//} catch (Exception ex) {
+	//    ex.printStackTrace();
+	//}
+
+	//int c = 3;
+	
+       
+
+	//try {
+	//    int a = 0;
+	//while (a < 1 || a > 5) {
+		//		Scanner in = new Scanner(System.in);
+	//	a = in.nextInt();
+	//}
+	    //} catch (InputMismatchException ix) {
+	    //System.out.println("Please enter an integer value 1-5");
+	    //}
+	    //catch (NoSuchElementException nx) {
+	    //System.out.println("That didn't work");
+	    //}
+	
+    }
+
+}

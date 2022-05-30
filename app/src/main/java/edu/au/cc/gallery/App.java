@@ -4,13 +4,13 @@
 package edu.au.cc.gallery;
 
 public class App {
-    public String getGreeting() {
-        return "Hello Dan!";
-    }
+    //  public String getGreeting() {
+    //return "Hello Dan!";
+    //}
 
-    public static void main(String[] args) throws Exception{
-        //System.out.println(new App().getGreeting());
-	//	S3.demo();
-	DB.demo();
-    }
+  public static void main(String[] args) throws Exception{
+      //System.out.println(new App().getGreeting());
+      //S3.demo();
+      UserAdmin.prompt();
+  }
 }

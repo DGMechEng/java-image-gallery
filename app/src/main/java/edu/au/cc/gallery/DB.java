@@ -38,12 +38,22 @@ public class DB {
 	}
     }
 
-    public ResultSet execute(String query) throws SQLException {
+    //return result set based on query
+    public ResultSet executeRS(String query, String[] values) throws SQLException {
 	PreparedStatement stmt = connection.prepareStatement(query);
+	for (int i = 0; i < values.length; i++) {
+	    stmt.setString(i+1, values[i]);
+	}
 	ResultSet rs = stmt.executeQuery();
 	return rs;
     }
 
+    public ResultSet execute(String query) throws SQLException{
+    	PreparedStatement stmt = connection.prepareStatement(query);
+    	ResultSet rs = stmt.executeQuery();
+    	return rs;
+    }
+    
     public void execute(String query, String[] values) throws SQLException {
 	PreparedStatement stmt = connection.prepareStatement(query);
 	for (int i = 0; i < values.length; i++) {
@@ -54,15 +64,75 @@ public class DB {
     public void close() throws SQLException {
 	connection.close();
     }
-    
-    public static void demo() throws Exception {
+
+    public static boolean exists(String username) throws Exception {
 	DB db = new DB();
 	db.connect();
-	db.execute("update users set password=? where username=?", new String[] {"monkey", "Fred"});
-	ResultSet rs = db.execute("select username, password, full_name from users");
-	while (rs.next()) {
-	    System.out.println(rs.getString(1)+", " + rs.getString(2)+", "+rs.getString(3));
-	}
+	ResultSet rs;
+	rs = db.executeRS("select username, full_name from users where username = ?", new String[] {username});
+	//check to see if resultset is empty
 	db.close();
+	
+	if(rs.next()) {
+	    //first, return existing records (for information only)
+	    return true;
+	}
+	//if empty, throw exception back to calling routine                                                                                                            
+	else {
+	    return false;
+	}
+    }
+    
+    public static void demo(int operation, String username, String password, String full_name) throws Exception {
+	DB db = new DB();
+	db.connect();
+
+	ResultSet rs;
+	
+	switch (operation) {
+	    //operation 1: show all users
+	case 1:
+	    rs = db.execute("select username, password, full_name from users");
+	    while (rs.next()) {
+		System.out.println(rs.getString(1)+", " + rs.getString(2)+", "+rs.getString(3));
+	    }
+	    break;
+	    //operation 2: add user specified by user input
+	case 2:
+	    try {
+	    db.execute("insert into users (username, password, full_name) values (?, ?, ?)", new String[] {username, password, full_name});
+	    } catch (SQLException px) {
+		System.out.println("Error: username already exists");
+	    }
+	    break;
+	case 3:
+	    //try {
+	    //update tuple
+     	    if(password.length()==0 && full_name.length() != 0) {
+		db.execute("update users set full_name=? where username=?", new String[] {full_name, username});
+	    }
+	    else if (password.length() != 0 && full_name.length() == 0) {
+		db.execute("update users set password=? where username=?", new String[] {password, username});
+	    }
+	    else if (password.length() == 0 && full_name.length() == 0) {
+		System.out.println("No updates were made");
+	    }
+	    else {
+		//
+		//
+		//this has a syntax error somehow
+		//
+		//
+		db.execute("udpate users set password=?, full_name=? where username=?", new String[] {password, full_name, username});
+	    }
+	    break;
+	case 4:
+	    db.execute("delete from users where username=?", new String[] {username});
+	    System.out.println("User " + username + " deleted");
+	    break;
+	case 5:
+	    db.close();
+	default: db.close();
+	}
     }
 }
