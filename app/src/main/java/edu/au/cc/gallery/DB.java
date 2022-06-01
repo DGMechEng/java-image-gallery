@@ -38,7 +38,7 @@ public class DB {
 	}
     }
 
-    //return result set based on query
+    //return result set based on query with input values
     public ResultSet executeRS(String query, String[] values) throws SQLException {
 	PreparedStatement stmt = connection.prepareStatement(query);
 	for (int i = 0; i < values.length; i++) {
@@ -48,12 +48,14 @@ public class DB {
 	return rs;
     }
 
+    //return result set based on query with no input values (query is self-contained)
     public ResultSet execute(String query) throws SQLException{
     	PreparedStatement stmt = connection.prepareStatement(query);
     	ResultSet rs = stmt.executeQuery();
     	return rs;
     }
-    
+
+    //No result, execute queries that don't require return of results
     public void execute(String query, String[] values) throws SQLException {
 	PreparedStatement stmt = connection.prepareStatement(query);
 	for (int i = 0; i < values.length; i++) {
@@ -61,10 +63,13 @@ public class DB {
 	}
 	stmt.execute();
     }
+
+    //close database connection
     public void close() throws SQLException {
 	connection.close();
     }
 
+    //check to see if a specific tuple exists before trying to modify it
     public static boolean exists(String username) throws Exception {
 	DB db = new DB();
 	db.connect();
@@ -74,11 +79,13 @@ public class DB {
 	db.close();
 	
 	if(rs.next()) {
-	    //first, return existing records (for information only)
+	    //if something is returned, then resultset is not empty and tuple was located. REturn true.
+	    db.close();
 	    return true;
 	}
-	//if empty, throw exception back to calling routine                                                                                                            
+	//if empty, return false
 	else {
+	    db.close();
 	    return false;
 	}
     }
@@ -106,7 +113,6 @@ public class DB {
 	    }
 	    break;
 	case 3:
-	    //try {
 	    //update tuple
      	    if(password.length()==0 && full_name.length() != 0) {
 		db.execute("update users set full_name=? where username=?", new String[] {full_name, username});
@@ -118,12 +124,7 @@ public class DB {
 		System.out.println("No updates were made");
 	    }
 	    else {
-		//
-		//
-		//this has a syntax error somehow
-		//
-		//
-		db.execute("udpate users set password=?, full_name=? where username=?", new String[] {password, full_name, username});
+		db.execute("update users set password=?, full_name=? where username=?", new String[] {password, full_name, username});
 	    }
 	    break;
 	case 4:

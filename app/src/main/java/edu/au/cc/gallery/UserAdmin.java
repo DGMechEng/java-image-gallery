@@ -27,7 +27,7 @@ public class UserAdmin {
 		   while (a < 1 || a > 5) {
 		       System.out.print("Enter command> ");
 		       a = in.nextInt();
-		       //		       in.nextLine();
+		       //		       System.out.println("Value entered was: " + a);
 		   }
 	       } catch (InputMismatchException ix) {
 		   System.out.println("Enter integer values only");
@@ -46,6 +46,7 @@ public class UserAdmin {
 	       case 2:
 		   try {
 		       System.out.print("Username> ");
+		       in.nextLine();
 		       username = in.nextLine();
 		       System.out.println();
 		       System.out.print("Password> ");
@@ -66,17 +67,16 @@ public class UserAdmin {
 		       System.out.print("Username to edit> ");
 		       in.nextLine();
 		       username = in.nextLine();
+		       System.out.println();
 		       if(DB.exists(username)) {
 			   System.out.print("New password (press enter to keep current)> ");
 			   password = in.nextLine();
-			   if(password.length()==0)
-			      System.out.println("The password you entered was :" + password);
 			   System.out.print("New full name (press enter to keep current)> ");
 			   full_name = in.nextLine();
 			   DB.demo(a, username, password, full_name);
 		       }
 		       else {
-			   System.out.println("Username not found");
+			   System.out.println("Username not found\n");
 		       }
 		   }
 		   catch (Exception ex) {
@@ -103,7 +103,7 @@ public class UserAdmin {
 	       case 5:
 		   try {
 		       DB.demo(a, null, null, null);
-		       System.out.prinln("Shutting down");
+		       System.out.println("Shutting down");
 		   } catch(Exception ex) {
 		       ex.printStackTrace();
 		   }
