@@ -2,41 +2,66 @@ package edu.au.cc.gallery;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+
 import java.sql.DriverManager;
 import java.sql.Connection;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class DB {
 
-    private static final String dbUrl = "jdbc:postgresql://demo-database-1.c3n5o7gpctqm.us-west-2.rds.amazonaws.com/image_gallery";
+    private static final String dbUrl = "jdbc:postgresql://ig-database.c3n5o7gpctqm.us-west-2.rds.amazonaws.com/image_gallery";
     private Connection connection;
 
-    private String getPassword() {
-
-	try{
-	    BufferedReader br = new BufferedReader(new FileReader("/home/ec2-user/.sql-passwd"));
-	    String result = br.readLine();
-	    br.close();
-	    return result;
-	} catch (IOException ex) {
-	    System.err.println("Error opening password file.  Make sure .sql-passwd exists and contains a valid password");
-	    System.exit(1);
-	}
-	return null;
+    private JSONObject getSecret(){
+	String s = Secrets.getSecretImageGallery();
+	return new JSONObject(s);
     }
 
+    private String getPassword(JSONObject secret) {
+	return secret.getString("password");
+    }
     
+    //private String getPassword() {
+
+    //	try{
+    // BufferedReader br = new BufferedReader(new FileReader("/home/ec2-user/.sql-passwd"));
+    //	    String result = br.readLine();
+    //	    br.close();
+    //	    return result;
+    //	} catch (IOException ex) {
+    //	    System.err.println("Error opening password file.  Make sure .sql-passwd exists and contains a valid password");
+    //	    System.exit(1);
+    //	}
+    //	return null;
+    //  }
+
     public void connect() throws SQLException {
-	try{
-	    connection = DriverManager.getConnection(dbUrl, "image_gallery", getPassword());
-	} catch (SQLException sx) {
-	    sx.printStackTrace();
+	try {
+	    Class.forName("org.postgresql.Driver");
+	    JSONObject secret = getSecret();
+	    connection = DriverManager.getConnection(dbUrl, "image_gallery", getPassword(secret));
+	} catch (ClassNotFoundException ex) {
+	    ex.printStackTrace();
 	    System.exit(1);
 	}
     }
+    
+    //public void connect() throws SQLException {
+    //	try{
+    //	    Class.forName("org.postgresql.Driver");
+    //	    JSONObject secret = getSecret();
+    //	} catch (SQLException sx) {
+    //	    sx.printStackTrace();
+    //	    System.exit(1);
+    //	}
+    //}
 
     //return result set based on query with input values
     public ResultSet executeRS(String query, String[] values) throws SQLException {

@@ -3,6 +3,15 @@
  */
 package edu.au.cc.gallery;
 
+import java.util.Map;
+import java.util.HashMap;
+
+import static spark.Spark.*;
+
+import spark.ModelAndView;
+
+import spark.template.handlebars.HandlebarsTemplateEngine;
+
 public class App {
     public String getGreeting() {
 	  return "App found";
@@ -11,6 +20,11 @@ public class App {
   public static void main(String[] args) throws Exception{
       //System.out.println(new App().getGreeting());
       //S3.demo();
-      UserAdmin.prompt();
+      //      UserAdmin.prompt();
+
+      //M3 stuff
+      port(5000);
+      new DBRoutes().addRoutes();
+      
   }
 }
