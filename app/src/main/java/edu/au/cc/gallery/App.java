@@ -18,13 +18,19 @@ public class App {
     }
 
   public static void main(String[] args) throws Exception{
+      String portString = System.getenv("JETTY_PORT");
+      if (portString == null || portString.equals(""))
+	  port(5000);
+      else
+	  port(Integer.parseInt(portString));
+      
       //System.out.println(new App().getGreeting());
       //S3.demo();
       //      UserAdmin.prompt();
 
       //M3 stuff
-      port(5000);
-      new DBRoutes().addRoutes();
+      //      port(5000);
+            new DBRoutes().addRoutes();
       
   }
 }

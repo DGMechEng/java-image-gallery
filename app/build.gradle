@@ -21,10 +21,10 @@ repositories {
 }
 
 dependencies {
-    implementation platform('software.amazon.awssdk:bom:2.15.0')
-    implementation 'software.amazon.awssdk:s3'
-    // Use JUnit test framework.
-    testImplementation 'junit:junit:4.13.2'
+implementation platform('software.amazon.awssdk:bom:2.15.0')
+implementation 'software.amazon.awssdk:s3'
+// Use JUnit test framework.
+testImplementation 'junit:junit:4.13.2'
 
 implementation 'software.amazon.awssdk:secretsmanager'
 
@@ -36,7 +36,8 @@ implementation group: 'com.sparkjava', name: 'spark-core', version: '2.9.3'
 
 implementation group: 'com.sparkjava', name: 'spark-template-handlebars', version: '2.7.1'
 
-implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.21'
+implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.36'
+
 
 }
 
