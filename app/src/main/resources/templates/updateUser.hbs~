@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Update profile for user: {{ username }}</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+<h1>Update profile for user:  {{ username }}</h1>
+<ul>
+  <form action="/userUpdated/{{username}}" method="GET">
+    Password: <input type="text" name="password" value={{password}}/><br />
+    Full Name: <input type="text" name="full_name" value={{full_name}}/><br />
+    </form>
+</ul>
+  </body>
+</html>

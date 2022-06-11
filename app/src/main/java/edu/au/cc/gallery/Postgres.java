@@ -1,5 +1,7 @@
 package edu.au.cc.gallery;
 
+import java.sql.SQLException;
+
 public class Postgres {
-    public static UserDAO getUserDAO() { return new PostgresUserDAO(); }
+    public static UserDAO getUserDAO() throws SQLException { return new PostgresUserDAO(); }
 }
