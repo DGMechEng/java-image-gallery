@@ -28,20 +28,6 @@ public class DB {
 	return secret.getString("password");
     }
     
-    //private String getPassword() {
-
-    //	try{
-    // BufferedReader br = new BufferedReader(new FileReader("/home/ec2-user/.sql-passwd"));
-    //	    String result = br.readLine();
-    //	    br.close();
-    //	    return result;
-    //	} catch (IOException ex) {
-    //	    System.err.println("Error opening password file.  Make sure .sql-passwd exists and contains a valid password");
-    //	    System.exit(1);
-    //	}
-    //	return null;
-    //  }
-
     public void connect() throws SQLException {
 	try {
 	    Class.forName("org.postgresql.Driver");
@@ -52,16 +38,6 @@ public class DB {
 	    System.exit(1);
 	}
     }
-    
-    //public void connect() throws SQLException {
-    //	try{
-    //	    Class.forName("org.postgresql.Driver");
-    //	    JSONObject secret = getSecret();
-    //	} catch (SQLException sx) {
-    //	    sx.printStackTrace();
-    //	    System.exit(1);
-    //	}
-    //}
 
     //return result set based on query with input values
     public ResultSet executeRS(String query, String[] values) throws SQLException {
