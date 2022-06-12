@@ -7,9 +7,9 @@
   <body>
 <h1>Administration for {{ name }} database:</h1>
 <ul>
-  {{#username}}
-<a href="/admin/updateUser/{{.}}">  {{.}} </a>
-  {{/username}}
+  {{#user}}<li>
+<a href="/admin/updateUser/{{.}}">  {{.}} </a> </li>
+  {{/user}}
 </ul>
   </body>
 </html>

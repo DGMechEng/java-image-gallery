@@ -28,10 +28,18 @@ public class PostgresUserDAO implements UserDAO {
     public User getUser(String username) throws SQLException {
 	User result;
 	ResultSet rs = connection.executeRS("select password, full_name from users where username=?", new String[] {username});
+	
+	//	rs.next();
 	if(rs.next()) {
-	    result=new User(rs.getString(1), rs.getString(2), rs.getString(3));
+	    result=new User(username, rs.getString(1), rs.getString(2));
+	    rs.close();
+	    return result;
 	}
 	rs.close();
-	return result;
+	return null;
+    }
+
+    public void updateUser(String username, String password, String full_name) throws SQLException {
+	connection.execute("update users set password=?, full_name=?", new String[] {password, full_name});
     }
 }

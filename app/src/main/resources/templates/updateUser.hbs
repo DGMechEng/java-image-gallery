@@ -8,9 +8,10 @@
 <h1>Update profile for user:  {{ username }}</h1>
 <ul>
   <form action="admin/userUpdated/{{username}}" method="GET">
-    Password: <input type="text" name="password" value={{password}}/><br />
-    Full Name: <input type="text" name="full_name" value={{full_name}}/><br />
-    </form>
+    Password: <input type="text" name="password" value={{password}}><br />
+    Full Name: <input type="text" name="full_name" value={{fullName}}><br />
+    <input type="submit" value="Update user" />
+  </form>
 </ul>
   </body>
 </html>
