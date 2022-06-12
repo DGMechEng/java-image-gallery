@@ -23,10 +23,7 @@ public class DBRoutes {
 	Map<String, Object> model = new HashMap<String, Object>();
 	try{
 	    UserDAO dao = Postgres.getUserDAO();
-	    for(User u: dao.getUsers()) {
-		model.put("user", u.getUsername());
-		System.out.println("Added user " + u.getUsername() + " to username map");
-	    }
+	    model.put("users", dao.getUsers());
 	} catch (SQLException sx) {
 	    sx.printStackTrace();
 	} catch (Exception e) {
@@ -42,12 +39,9 @@ public class DBRoutes {
 	try{
 	    UserDAO dao = Postgres.getUserDAO();
 	    User u = dao.getUser(req.params(":username"));
-	    model.put("username",u.getUsername());
-	    model.put("password",u.getPassword());
-	    model.put("fullName",u.getFullName());
-    
-	    System.out.println("looking for user " + req.params(":username"));
-	    System.out.println("with full name " + u.getFullName());
+	    model.put("user", u);
+	    //	    model.put("user", dao.getUser(req.params(":username")));
+	    System.out.println("full name is :" + u.getFullName());
 	} catch(SQLException sx) {
 	    sx.printStackTrace();
 	} catch(Exception e) {
@@ -72,12 +66,49 @@ public class DBRoutes {
 	    .render(new ModelAndView(model, "userUpdated.hbs"));
     }
 
+    public String deleteUser(Request req, Response res) {
+	Map<String, Object> model = new HashMap<String, Object>();
+        try{
+            UserDAO dao = Postgres.getUserDAO();
+            dao.deleteUser(req.params(":username"));
+	} catch(SQLException sx) {
+            sx.printStackTrace();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        model.put("name", req.params(":username"));
+        return new HandlebarsTemplateEngine()
+            .render(new ModelAndView(model, "userDeleted.hbs"));
+    }
+
+    public String addUser(Request req, Response res) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        return new HandlebarsTemplateEngine()
+            .render(new ModelAndView(model, "addUser.hbs"));
+    }
+
+    public String userAdded(Request req, Response res) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        try{
+            UserDAO dao = Postgres.getUserDAO();
+            dao.addUser(req.queryParams("username"), req.queryParams("password"), req.queryParams("full_name"));
+        } catch(SQLException sx) {
+            sx.printStackTrace();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        model.put("name", req.queryParams("username"));
+        return new HandlebarsTemplateEngine()
+            .render(new ModelAndView(model, "userAdded.hbs"));
+    }
     
+
     public void addRoutes() {
 	get("/admin", (req, res) -> admin(req, res));
 	get("/admin/updateUser/:username", (req, res) -> updateUser(req, res));
 	get("/admin/updateUser/admin/userUpdated/:username", (req, res) -> userUpdated(req, res));
+	get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
+	get("/admin/addUser", (req, res) -> addUser(req, res));
+	get("/admin/admin/userAdded", (req, res) -> userAdded(req, res));
     }
-
-
 }

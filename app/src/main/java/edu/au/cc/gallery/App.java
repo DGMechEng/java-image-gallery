@@ -30,7 +30,11 @@ public class App {
 
       //M3 stuff
       //      port(5000);
-      
+
+      DB db = new DB();
+      db.connect();
+      UserDAO dao = Postgres.getUserDAO();
+      System.out.println(dao.getUsers());
             new DBRoutes().addRoutes();
       
   }

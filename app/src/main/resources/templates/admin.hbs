@@ -7,9 +7,16 @@
   <body>
 <h1>Administration for {{ name }} database:</h1>
 <ul>
-  {{#user}}<li>
-<a href="/admin/updateUser/{{.}}">  {{.}} </a> </li>
-  {{/user}}
+  {{#users}}<li>
+    <a href="/admin/updateUser/{{username}}">  {{username}} </a>
+    <form action="/admin/deleteUser/{{username}}" method="GET">
+      <input type="submit" value="Delete User" />
+      </form>
+  </li>
+  {{/users}}
 </ul>
+<form action="/admin/addUser" method="GET">
+<input type="submit" value="Add user" />
+  </form>
   </body>
 </html>

@@ -21,7 +21,7 @@ public class PostgresUserDAO implements UserDAO {
 	    result.add(new User(rs.getString(1), rs.getString(2), rs.getString(3)));
 	    //username, password, full_name
 	}
-	rs.close();
+	connection.close();
 	return result;
     }
 
@@ -40,6 +40,14 @@ public class PostgresUserDAO implements UserDAO {
     }
 
     public void updateUser(String username, String password, String full_name) throws SQLException {
-	connection.execute("update users set password=?, full_name=?", new String[] {password, full_name});
+	connection.execute("update users set password=?, full_name=? where username=?", new String[] {password, full_name, username});
+    }
+
+    public void deleteUser(String username) throws SQLException {
+        connection.execute("delete from users where username=?", new String[] {username});
+    }
+
+    public void addUser(String username, String password, String full_name) throws SQLException{
+	connection.execute("insert into users (username, password, full_name) values (?, ?, ?)", new String[] {username, password, full_name});
     }
 }
