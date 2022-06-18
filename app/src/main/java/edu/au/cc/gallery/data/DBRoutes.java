@@ -1,4 +1,4 @@
-package edu.au.cc.gallery;
+package edu.au.cc.gallery.data;
 
 import static spark.Spark.*;
 
@@ -101,7 +101,16 @@ public class DBRoutes {
         return new HandlebarsTemplateEngine()
             .render(new ModelAndView(model, "userAdded.hbs"));
     }
-    
+
+    public String login(Request req, Response res) {
+	Map<String, Object> model = new HashMap<String, Object>();
+	return new HandlebarsTemplateEngine()
+	    .render(new ModelAndView(model, "login.hbs"));
+    }
+
+    public String loginPost(Request req, Response res) {
+	return "";
+    }
 
     public void addRoutes() {
 	get("/admin", (req, res) -> admin(req, res));
@@ -110,5 +119,7 @@ public class DBRoutes {
 	get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
 	get("/admin/addUser", (req, res) -> addUser(req, res));
 	get("/admin/admin/userAdded", (req, res) -> userAdded(req, res));
+	get("/login", (req, res) -> login(req,res));
+	post("/login", (req, res) -> loginPost(req,res));
     }
 }

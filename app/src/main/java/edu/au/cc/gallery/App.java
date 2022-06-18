@@ -12,6 +12,10 @@ import spark.ModelAndView;
 
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
+
+
+import edu.au.cc.gallery.data.*;
+
 public class App {
     public String getGreeting() {
 	  return "App found";
