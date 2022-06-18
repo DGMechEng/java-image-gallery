@@ -102,6 +102,12 @@ public class DBRoutes {
             .render(new ModelAndView(model, "userAdded.hbs"));
     }
 
+    public String mainPage(Request req, Response res) {
+	Map<String, Object> model = new HashMap<String, Object>();
+	return new HandlebarsTemplateEngine()
+	    .render(new ModelAndView(model, "main.hbs"));
+    }
+    
     public String login(Request req, Response res) {
 	Map<String, Object> model = new HashMap<String, Object>();
 	return new HandlebarsTemplateEngine()
@@ -109,6 +115,20 @@ public class DBRoutes {
     }
 
     public String loginPost(Request req, Response res) {
+	try {
+	    String username = req.queryParams("username");
+	    UserDAO dao = Postgres.getUserDAO();
+	    User u = dao.getUser(username);
+	    if (u == null || !u.getPassword().equals(req.queryParams("password"))) {
+		System.out.println("Invalid username or password: " +u);
+		res.redirect("/login");
+		return "";
+	    }
+	    req.session().attribute("user", username);
+	    res.redirect("/admin");
+	} catch (Exception ex) {
+	    return "Error: " + ex.getMessage();
+	}
 	return "";
     }
 
@@ -121,5 +141,6 @@ public class DBRoutes {
 	get("/admin/admin/userAdded", (req, res) -> userAdded(req, res));
 	get("/login", (req, res) -> login(req,res));
 	post("/login", (req, res) -> loginPost(req,res));
+	get("/", (req, res) -> mainPage(req, res));
     }
 }
