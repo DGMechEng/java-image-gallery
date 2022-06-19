@@ -13,11 +13,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import edu.au.cc.gallery.data.image.*;
+
 import java.sql.SQLException;
 
 import spark.ModelAndView;
 
-public class DBRoutes {
+public class Admin {
 
     public String admin(Request req, Response res) {
 	Map<String, Object> model = new HashMap<String, Object>();
@@ -89,9 +91,15 @@ public class DBRoutes {
 
     public String userAdded(Request req, Response res) {
         Map<String, Object> model = new HashMap<String, Object>();
+	String admin;
         try{
             UserDAO dao = Postgres.getUserDAO();
-            dao.addUser(req.queryParams("username"), req.queryParams("password"), req.queryParams("full_name"));
+	    if(req.queryParams("isadmin")=="admin")
+		admin="admin";
+	    else
+		admin="notadmin";
+		    
+            dao.addUser(req.queryParams("username"), req.queryParams("password"), req.queryParams("full_name"), admin);
         } catch(SQLException sx) {
             sx.printStackTrace();
         } catch(Exception e) {
@@ -102,45 +110,36 @@ public class DBRoutes {
             .render(new ModelAndView(model, "userAdded.hbs"));
     }
 
-    public String mainPage(Request req, Response res) {
-	Map<String, Object> model = new HashMap<String, Object>();
-	return new HandlebarsTemplateEngine()
-	    .render(new ModelAndView(model, "main.hbs"));
-    }
-    
-    public String login(Request req, Response res) {
-	Map<String, Object> model = new HashMap<String, Object>();
-	return new HandlebarsTemplateEngine()
-	    .render(new ModelAndView(model, "login.hbs"));
+    private void checkAdmin(Request req, Response res) {
+	System.out.println("User who logged in is: " + req.session().attribute("user"));
+	if(!isAdmin(req.session().attribute("user"))) {
+	    res.redirect("/login");
+	    halt();
+	}
     }
 
-    public String loginPost(Request req, Response res) {
+    private boolean isAdmin(String username) {
 	try {
-	    String username = req.queryParams("username");
 	    UserDAO dao = Postgres.getUserDAO();
 	    User u = dao.getUser(username);
-	    if (u == null || !u.getPassword().equals(req.queryParams("password"))) {
-		System.out.println("Invalid username or password: " +u);
-		res.redirect("/login");
-		return "";
-	    }
-	    req.session().attribute("user", username);
-	    res.redirect("/admin");
-	} catch (Exception ex) {
-	    return "Error: " + ex.getMessage();
-	}
-	return "";
+	    System.out.println("The admin value for user " + u + " is " + u.getAdmin());
+	    return (u.getAdmin()=="admin");
+	} catch (SQLException sx) {
+            sx.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+	return false;
     }
-
+    
     public void addRoutes() {
+	before("/admin/*", (req, res) -> checkAdmin(req, res));
+	before("/admin*", (req, res) -> checkAdmin(req, res));
 	get("/admin", (req, res) -> admin(req, res));
 	get("/admin/updateUser/:username", (req, res) -> updateUser(req, res));
 	get("/admin/updateUser/admin/userUpdated/:username", (req, res) -> userUpdated(req, res));
 	get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
 	get("/admin/addUser", (req, res) -> addUser(req, res));
 	get("/admin/admin/userAdded", (req, res) -> userAdded(req, res));
-	get("/login", (req, res) -> login(req,res));
-	post("/login", (req, res) -> loginPost(req,res));
-	get("/", (req, res) -> mainPage(req, res));
     }
 }

@@ -11,6 +11,10 @@ plugins {
     id 'application'
 }
 
+run.doFirst {
+environment 'JETTY_PORT', '5555'
+}
+
 run {
 standardInput=System.in
 }
@@ -38,6 +42,9 @@ implementation group: 'com.sparkjava', name: 'spark-template-handlebars', versio
 
 implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.36'
 
+implementation group: 'com.amazonaws', name: 'aws-java-sdk-core', version: '1.12.243'
+
+implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.243'
 
 }
 

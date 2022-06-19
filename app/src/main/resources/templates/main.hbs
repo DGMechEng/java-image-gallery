@@ -7,16 +7,17 @@
   <body>
     <h1>Image gallery home</h1>
     
-<form action="/upload" method="GET">
-  <input type="submit" value="Upload image" />
-</form><br>
+<form method='post' enctype='multipart/form-data' action='/upload'>
+    <input type='file' name='uploaded_file'>
+    <button>Upload picture</button>"
+</form>"
 
 <form action="/view" method="GET">
   <input type="submit" value="View your images">
 </form><br>
 
-<form action="/view" method="GET">
-  <input type="submit" value="View your images">
+<form action="/admin" method="GET">
+  <input type="submit" value="Database administration">
 </form>
   </body>
 </html>

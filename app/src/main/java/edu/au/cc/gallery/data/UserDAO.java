@@ -13,6 +13,6 @@ public interface UserDAO {
 
     void deleteUser(String username) throws Exception;
 
-    void addUser(String username, String password, String full_name) throws Exception;
+    void addUser(String username, String password, String full_name, String admin) throws Exception;
 
 }

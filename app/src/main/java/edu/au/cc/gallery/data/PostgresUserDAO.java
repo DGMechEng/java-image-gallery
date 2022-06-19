@@ -17,9 +17,9 @@ public class PostgresUserDAO implements UserDAO {
     
     public List<User> getUsers() throws SQLException {
 	List<User> result = new ArrayList<User>();
-	ResultSet rs = connection.execute("select username, password, full_name from users");
+	ResultSet rs = connection.execute("select username, password, full_name, admin from users");
 	while(rs.next()) {
-	    result.add(new User(rs.getString(1), rs.getString(2), rs.getString(3)));
+	    result.add(new User(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
 	    //username, password, full_name
 	}
 	connection.close();
@@ -28,11 +28,11 @@ public class PostgresUserDAO implements UserDAO {
 
     public User getUser(String username) throws SQLException {
 	User result;
-	ResultSet rs = connection.executeRS("select password, full_name from users where username=?", new String[] {username});
+	ResultSet rs = connection.executeRS("select password, full_name, admin from users where username=?", new String[] {username});
 	
 	//	rs.next();
 	if(rs.next()) {
-	    result=new User(username, rs.getString(1), rs.getString(2));
+	    result=new User(username, rs.getString(1), rs.getString(2), rs.getString(3));
 	    rs.close();
 	    return result;
 	}
@@ -48,7 +48,7 @@ public class PostgresUserDAO implements UserDAO {
         connection.execute("delete from users where username=?", new String[] {username});
     }
 
-    public void addUser(String username, String password, String full_name) throws SQLException{
-	connection.execute("insert into users (username, password, full_name) values (?, ?, ?)", new String[] {username, password, full_name});
+    public void addUser(String username, String password, String full_name, String admin) throws SQLException{
+	connection.execute("insert into users (username, password, full_name, admin) values (?, ?, ?, ?)", new String[] {username, password, full_name, admin});
     }
 }

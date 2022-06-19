@@ -1,4 +1,4 @@
-package edu.au.cc.gallery;
+package edu.au.cc.gallery.data;
 
 import static spark.Spark.*;
 
@@ -13,11 +13,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import edu.au.cc.gallery.data.image.*;
+
 import java.sql.SQLException;
 
 import spark.ModelAndView;
 
-public class DBRoutes {
+public class Admin {
 
     public String admin(Request req, Response res) {
 	Map<String, Object> model = new HashMap<String, Object>();
@@ -102,16 +104,20 @@ public class DBRoutes {
             .render(new ModelAndView(model, "userAdded.hbs"));
     }
 
-    public String login(Request req, Response res) {
-	Map<String, Object> model = new HashMap<String, Object>();
-	return new HandlebarsTemplateEngine()
-	    .render(new ModelAndView(model, "login.hbs"));
+    private void checkAdmin(Request req, Response res) {
+	if(!isAdmin(req.session().attribute("user"))) {
+	    res.redirect("/login");
+	    halt();
+	}
     }
 
-    public String loginPost(Request req, Response res) {
-	return "";
+    private boolean isAdmin(String username) {
+	UserDAO dao = Postgres.getUserDAO();
+	User u = dao.getUser(username);
+	return u.getAdmin();
+	return True;
     }
-
+    
     public void addRoutes() {
 	get("/admin", (req, res) -> admin(req, res));
 	get("/admin/updateUser/:username", (req, res) -> updateUser(req, res));
@@ -119,7 +125,6 @@ public class DBRoutes {
 	get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
 	get("/admin/addUser", (req, res) -> addUser(req, res));
 	get("/admin/admin/userAdded", (req, res) -> userAdded(req, res));
-	get("/login", (req, res) -> login(req,res));
-	post("/login", (req, res) -> loginPost(req,res));
+	before("/admin/*", (req, res) -> checkAdmin(req, res));
     }
 }

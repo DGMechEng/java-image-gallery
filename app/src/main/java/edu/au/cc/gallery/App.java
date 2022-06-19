@@ -15,6 +15,7 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 
 
 import edu.au.cc.gallery.data.*;
+import edu.au.cc.gallery.data.image.*;
 
 public class App {
     public String getGreeting() {
@@ -39,7 +40,7 @@ public class App {
       db.connect();
       UserDAO dao = Postgres.getUserDAO();
       System.out.println(dao.getUsers());
-            new DBRoutes().addRoutes();
-      
+            new Admin().addRoutes();
+	    new imageRoutes().addRoutes();      
   }
 }

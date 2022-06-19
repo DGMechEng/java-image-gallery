@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Administration for {{ name }} database</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+<h1>Administration for {{ name }} database:</h1>
+<ul>
+  {{#users}}<li>
+    <a href="/admin/updateUser/{{username}}">  {{username}} </a>
+    <form action="/admin/deleteUser/{{username}}" method="GET">
+      <input type="submit" value="Delete User" />
+      </form>
+  </li>
+  {{/users}}
+</ul>
+<form action="/admin/addUser" method="GET">
+<input type="submit" value="Add user" />
+  </form>
+  </body>
+</html>
