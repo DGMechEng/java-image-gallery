@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+]<!DOCTYPE html>
 <html>
   <head>
     <title>Photo album for {{ name }}</title>
@@ -7,16 +7,12 @@
   <body>
 <h1>Photo album for {{ name }}</h1>
 <ul>
-  {{#users}}<li>
-    <a href="/admin/updateUser/{{username}}">  {{username}} </a>
-    <form action="/admin/deleteUser/{{username}}" method="GET">
-      <input type="submit" value="Delete User" />
-      </form>
+  {{#links}}<li>
+ <img src = {{link}}>
   </li>
-  {{/users}}
+  {{/links}}
 </ul>
-<form action="/admin/addUser" method="GET">
-<input type="submit" value="Add user" />
+
   </form>
   </body>
 </html>

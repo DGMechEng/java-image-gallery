@@ -3,6 +3,7 @@ package edu.au.cc.gallery.data;
 
 import java.util.List;
 
+import edu.au.cc.gallery.data.image.Link;
 
 public interface UserDAO {
     List<User> getUsers() throws Exception;
@@ -15,4 +16,5 @@ public interface UserDAO {
 
     void addUser(String username, String password, String full_name, String admin) throws Exception;
 
+    List<Link> getImageLinks(String username) throws Exception;
 }

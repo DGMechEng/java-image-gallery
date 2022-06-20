@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import edu.au.cc.gallery.data.image.Link;
+
 public class PostgresUserDAO implements UserDAO {
     private DB connection;
 
@@ -40,6 +42,15 @@ public class PostgresUserDAO implements UserDAO {
 	return null;
     }
 
+    public List<Link> getImageLinks(String username) throws SQLException {
+	List<Link> result = new ArrayList<Link>();
+	ResultSet rs = connection.executeRS("select bucket_link from images where username=?", new String[] {username});
+	while(rs.next()) {
+	    result.add(new Link(rs.getString(1)));
+	}
+	return result;
+    }
+    
     public void updateUser(String username, String password, String full_name) throws SQLException {
 	connection.execute("update users set password=?, full_name=? where username=?", new String[] {password, full_name, username});
     }

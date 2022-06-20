@@ -11,6 +11,7 @@ import static spark.Spark.*;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 
 import java.sql.SQLException;
@@ -32,6 +33,10 @@ public class imageRoutes {
 
 
     public String mainPage(Request req, Response res) {
+	if (!isLoggedIn(req)){
+            res.redirect("/login");
+            halt();
+	}
 	Map<String, Object> model = new HashMap<String, Object>();
 	return new HandlebarsTemplateEngine()
 	    .render(new ModelAndView(model, "main.hbs"));
@@ -62,6 +67,10 @@ public class imageRoutes {
     }
 
     public String upload(Request req, Response res) {
+	if (!isLoggedIn(req)){
+	    res.redirect("/login");
+	    halt();
+	    }
 	File uploadDir = new File("/home/ec2-user/java-image-gallery/app/src/main/java/edu/au/cc/gallery/upload");
 	uploadDir.mkdir();
 	//StaticFiles.externalLocation("/home/ec2-user/java-image-gallery/app/src/main/java/edu/au/cc/gallery/upload");
@@ -84,15 +93,36 @@ public class imageRoutes {
     }
 
     public String getImages(Request req, Response res) {
-	return "";
+	if (!isLoggedIn(req)){
+            res.redirect("/login");
+            halt();
+	}
+	Map<String, Object> model = new HashMap<String, Object>();
+	List<Link> list = new ArrayList<Link>();
+	Link link = new Link("/home/ec2-user/java-image-gallery/app/src/main/java/edu/au/cc/gallery/upload/11061197677165893020");
+	String username = req.session().attribute("user");
+	try{
+	UserDAO dao = Postgres.getUserDAO();
+	//	list = dao.getImageLinks(username);
+	list.add(link);
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	}
+	model.put("name", username);
+	model.put("links", list);
+
+	return new HandlebarsTemplateEngine()
+	  .render(new ModelAndView(model, "images.hbs"));
+	//		return "";
     }
     
     public void addRoutes() {
 	get("/login", (req, res) -> login(req,res));
 	post("/login", (req, res) -> loginPost(req,res));
 	get("/", (req, res) -> mainPage(req, res));
-	post("/upload", (req, res) -> upload(req, res));
+	get("/upload", (req, res) -> upload(req, res));
 	get("/view", (req, res) -> getImages(req, res));
+	get("/debugSession", (req, res) -> debugSession(req, res));
     }
 
     private static void logInfo(Request req, Path tempFile) throws IOException, ServletException {
@@ -106,5 +136,19 @@ public class imageRoutes {
             }
         }
         return null;
+    }
+    public boolean isLoggedIn(Request req) {
+	if(req.session().attribute("user")==null)
+	    return false;
+	return true;
+    }
+    
+    private String debugSession(Request req, Response res) {
+	StringBuffer sb = new StringBuffer();
+	//	for (String key: req.session().attributes()) {
+	//  sb.append(key + "->" + req.session().attribute(key)+"<br />");
+	//}
+	sb.append((String)req.session().attribute("user"));
+	return sb.toString();
     }
 }
