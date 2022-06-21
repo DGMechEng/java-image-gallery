@@ -95,25 +95,25 @@ public class S3Intfc {
     
     }
 
-    //    public S3Object download(GetObjectRequest gor) {
-    //	return client.getObject(gor);
-    //}
+    public S3Object download(GetObjectRequest gor) {
+	return client.getObject(gor);
+    }
 
     
-    //public static void fromS3(String uuid) {
+    public static void fromS3(String uuid) {
 
-    //  String key = "uuid";
-    //	S3Intfc s3 = new S3Intfc();
-    //	s3.connect();
-    //	S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
+        String key = "uuid";
+	S3Intfc s3 = new S3Intfc();
+	s3.connect();
+	S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
 	
-    //  try {
+        try {
 	    //            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 	    //      .withRegion(region)
 	    //      .withCredentials(new ProfileCredentialsProvider())
 	    //      .build();
 	    // Get an object and print its contents.
-    //      System.out.println("Downloading an object");
+            System.out.println("Downloading an object");
 	    //
 	    //
 	    //what is actually calling getObject????
@@ -121,34 +121,34 @@ public class S3Intfc {
 	    //
 	     
 	    //            fullObject = s3.client.getObject(new GetObjectRequest(bucketName, key));
-    //	    fullObject = s3.download(new GetObjectRequest(bucketName, key));
-    //	    final BufferedInputStream i = new BufferedInputStream(fullObject.getObjectContent());
-    //	    InputStream objectData = fullObject.getObjectContent();
-    //	    Files.copy(objectData, new File("/home/ec2-user/java-image-gallery/app/src/main/java/edu/au/cc/gallery/download/" + uuid).toPath());
-    //	    objectData.close();
+	    fullObject = s3.download(new GetObjectRequest(bucketName, key));
+	    final BufferedInputStream i = new BufferedInputStream(fullObject.getObjectContent());
+	    InputStream objectData = fullObject.getObjectContent();
+	    Files.copy(objectData, new File("/home/ec2-user/java-image-gallery/app/src/main/java/edu/au/cc/gallery/download/" + uuid).toPath());
+	    objectData.close();
 	    //   System.out.println("Content-Type: " + fullObject.getObjectMetadata().getContentType());
             //System.out.println("Content: ");
             //displayTextInputStream(fullObject.getObjectContent());
 
-    //	    } catch (AmazonServiceException e) {
+	    } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process 
             // it, so it returned an error response.
-    //      e.printStackTrace();
-    //  } catch (SdkClientException e) {
+            e.printStackTrace();
+        } catch (SdkClientException e) {
             // Amazon S3 couldn't be contacted for a response, or the client
             // couldn't parse the response from Amazon S3.
-    //      e.printStackTrace();
-    //  } finally {
+            e.printStackTrace();
+        } finally {
             // To ensure that the network connection doesn't remain open, close any open input streams.
-    //      if (fullObject != null) {
-    //          fullObject.close();
-    //      }
-    //      if (objectPortion != null) {
-    //          objectPortion.close();
-    //      }
-    //      if (headerOverrideObject != null) {
-    //          headerOverrideObject.close();
-    //      }
-    //  }
-    //}
+            if (fullObject != null) {
+                fullObject.close();
+            }
+            if (objectPortion != null) {
+                objectPortion.close();
+            }
+            if (headerOverrideObject != null) {
+                headerOverrideObject.close();
+            }
+        }
+    }
 }

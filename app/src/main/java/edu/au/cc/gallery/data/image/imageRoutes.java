@@ -103,19 +103,22 @@ public class imageRoutes {
             halt();
 	}
 	Map<String, Object> model = new HashMap<String, Object>();
-	List<String> list = new ArrayList<String>();
+	List<String> uuidlist = new ArrayList<String>();
+	List<File> flist = new ArrayList<File>();
 	String username = req.session().attribute("user");
 	try{
 	UserDAO dao = Postgres.getUserDAO();
-	list = dao.getImageLinks(username);
-	for(String s: list) {
-	    S3Intfc.fromS3(s);
+	uuidlist = dao.getImageLinks(username);
+	for(String s: uuidlist) {
+	    S3download s3 = new S3download();
+	    flist.add(s3.download(s));
+	    //	    S3Intfc.fromS3(s);
 	}
 	} catch (Exception ex) {
 	    ex.printStackTrace();
 	}
 	model.put("name", username);
-	model.put("imageID", list);
+	model.put("imageID", flist);
 
 	return new HandlebarsTemplateEngine()
 	  .render(new ModelAndView(model, "images.hbs"));
