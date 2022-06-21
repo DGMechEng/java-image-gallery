@@ -23,6 +23,8 @@ import java.nio.file.Path;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.UUID;
+
 public class S3Intfc {
     private static final Region region = Region.US_WEST_2;
     private S3Client client;
@@ -55,8 +57,8 @@ public class S3Intfc {
 	client.putObject(por, picFile);
     }
     
-    public static void  toS3(Path picFile) {
-	String fileObjKeyName = "image"; //for now, may need to create an index of some sort
+    public static void  toS3(Path picFile, String uuid) {
+	String fileObjKeyName = uuid; //for now, may need to create an index of some sort
 	String bucketName = "m5-images-bucket";
   	S3Intfc s3 = new S3Intfc();
 	File f = new File(picFile.toString());

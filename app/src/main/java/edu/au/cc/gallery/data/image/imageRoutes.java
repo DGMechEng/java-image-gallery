@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
-
+import java.util.UUID;
 import java.sql.SQLException;
 
 import spark.ModelAndView;
@@ -76,18 +76,23 @@ public class imageRoutes {
 	//StaticFiles.externalLocation("/home/ec2-user/java-image-gallery/app/src/main/java/edu/au/cc/gallery/upload");
 	Path tempFile;	
 	try{
+	    String username = req.session().attribute("user");
 	    tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
 	    req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 	    InputStream input = req.raw().getPart("uploaded_file").getInputStream();
 	    Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
 	    logInfo(req, tempFile);
-	    System.out.println("uploaded file is: " + tempFile.getFileName());
-	    S3Intfc.toS3(tempFile);
+	    String uuid = UUID.randomUUID().toString();
+	    S3Intfc.toS3(tempFile, uuid);
+	    UserDAO dao = Postgres.getUserDAO();
+	    dao.addImageUUID(username, uuid);
 	    return "<h1>You uploaded this image:<h1><img src='" + tempFile.getFileName() + "'>";
 	} catch (IOException ix) {
 	    ix.printStackTrace();
 	} catch (ServletException sx) {
 	    sx.printStackTrace();
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
 	return "";
     }
@@ -98,18 +103,17 @@ public class imageRoutes {
             halt();
 	}
 	Map<String, Object> model = new HashMap<String, Object>();
-	List<Link> list = new ArrayList<Link>();
-	Link link = new Link("/home/ec2-user/java-image-gallery/app/src/main/java/edu/au/cc/gallery/upload/11061197677165893020");
+	List<String> list = new ArrayList<String>();
 	String username = req.session().attribute("user");
 	try{
 	UserDAO dao = Postgres.getUserDAO();
-	//	list = dao.getImageLinks(username);
-	list.add(link);
+	list = dao.getImageLinks(username);
+
 	} catch (Exception ex) {
 	    ex.printStackTrace();
 	}
 	model.put("name", username);
-	model.put("links", list);
+	model.put("imageID", list);
 
 	return new HandlebarsTemplateEngine()
 	  .render(new ModelAndView(model, "images.hbs"));
@@ -120,7 +124,7 @@ public class imageRoutes {
 	get("/login", (req, res) -> login(req,res));
 	post("/login", (req, res) -> loginPost(req,res));
 	get("/", (req, res) -> mainPage(req, res));
-	get("/upload", (req, res) -> upload(req, res));
+	post("/upload", (req, res) -> upload(req, res));
 	get("/view", (req, res) -> getImages(req, res));
 	get("/debugSession", (req, res) -> debugSession(req, res));
     }

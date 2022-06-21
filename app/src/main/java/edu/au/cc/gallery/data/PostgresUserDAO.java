@@ -42,11 +42,11 @@ public class PostgresUserDAO implements UserDAO {
 	return null;
     }
 
-    public List<Link> getImageLinks(String username) throws SQLException {
-	List<Link> result = new ArrayList<Link>();
-	ResultSet rs = connection.executeRS("select bucket_link from images where username=?", new String[] {username});
+    public List<String> getImageLinks(String username) throws SQLException {
+	List<String> result = new ArrayList<String>();
+	ResultSet rs = connection.executeRS("select image_key from images where username=?", new String[] {username});
 	while(rs.next()) {
-	    result.add(new Link(rs.getString(1)));
+	    result.add(rs.getString(1));
 	}
 	return result;
     }
@@ -61,5 +61,9 @@ public class PostgresUserDAO implements UserDAO {
 
     public void addUser(String username, String password, String full_name, String admin) throws SQLException{
 	connection.execute("insert into users (username, password, full_name, admin) values (?, ?, ?, ?)", new String[] {username, password, full_name, admin});
+    }
+
+    public void addImageUUID(String username, String uuid) throws SQLException {
+	connection.execute("insert into images (username, image_key) values (?,?)", new String[] {username, uuid});
     }
 }

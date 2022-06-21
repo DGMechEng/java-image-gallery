@@ -7,10 +7,10 @@
   <body>
 <h1>Photo album for {{ name }}</h1>
 <ul>
-  {{#links}}<li>
- <img src = {{link}}>
+  {{#imageID}}<li>
+ <img src = {{.}}>
   </li>
-  {{/links}}
+  {{/imageID}}
 </ul>
 
   </form>

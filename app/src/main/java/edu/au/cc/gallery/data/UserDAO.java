@@ -16,5 +16,7 @@ public interface UserDAO {
 
     void addUser(String username, String password, String full_name, String admin) throws Exception;
 
-    List<Link> getImageLinks(String username) throws Exception;
+    List<String> getImageLinks(String username) throws Exception;
+
+    void addImageUUID(String username, String uuid) throws Exception;
 }

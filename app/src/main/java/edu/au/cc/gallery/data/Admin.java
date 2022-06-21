@@ -42,7 +42,6 @@ public class Admin {
 	    UserDAO dao = Postgres.getUserDAO();
 	    User u = dao.getUser(req.params(":username"));
 	    model.put("user", u);
-	    //	    model.put("user", dao.getUser(req.params(":username")));
 	    System.out.println("full name is :" + u.getFullName());
 	} catch(SQLException sx) {
 	    sx.printStackTrace();
