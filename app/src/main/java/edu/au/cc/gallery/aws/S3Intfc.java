@@ -17,18 +17,28 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.File;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.BufferedInputStream;
 
 import java.util.UUID;
 
 public class S3Intfc {
     private static final Region region = Region.US_WEST_2;
     private S3Client client;
-
+    private static final String bucketName = "m5-images-bucket";
+    
     public void connect() {
 	client = S3Client.builder().region(region).build();
     }
@@ -59,7 +69,7 @@ public class S3Intfc {
     
     public static void  toS3(Path picFile, String uuid) {
 	String fileObjKeyName = uuid; //for now, may need to create an index of some sort
-	String bucketName = "m5-images-bucket";
+	//	String bucketName = "m5-images-bucket";
   	S3Intfc s3 = new S3Intfc();
 	File f = new File(picFile.toString());
 	s3.connect();
@@ -83,5 +93,55 @@ public class S3Intfc {
             e.printStackTrace();
         }
     
+    }
+    public static void fromS3(String uuid) {
+
+        String key = "uuid";
+	S3Intfc s3 = new S3Intfc();
+	s3.connect();
+	S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
+	
+        try {
+	    //            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+	    //      .withRegion(region)
+	    //      .withCredentials(new ProfileCredentialsProvider())
+	    //      .build();
+	    // Get an object and print its contents.
+            System.out.println("Downloading an object");
+	    //
+	    //
+	    //what is actually calling getObject????
+	    //
+	    //
+	     
+            fullObject = s3.client.getObject(new GetObjectRequest(bucketName, key));
+	    final BufferedInputStream i = new BufferedInputStream(fullObject.getObjectContent());
+	    InputStream objectData = fullObject.getObjectContent();
+	    Files.copy(objectData, new File("/home/ec2-user/java-image-gallery/app/src/main/java/edu/au/cc/gallery/download/" + uuid).toPath());
+	    objectData.close();
+	    //   System.out.println("Content-Type: " + fullObject.getObjectMetadata().getContentType());
+            //System.out.println("Content: ");
+            //displayTextInputStream(fullObject.getObjectContent());
+
+	    } catch (AmazonServiceException e) {
+            // The call was transmitted successfully, but Amazon S3 couldn't process 
+            // it, so it returned an error response.
+            e.printStackTrace();
+        } catch (SdkClientException e) {
+            // Amazon S3 couldn't be contacted for a response, or the client
+            // couldn't parse the response from Amazon S3.
+            e.printStackTrace();
+        } finally {
+            // To ensure that the network connection doesn't remain open, close any open input streams.
+            if (fullObject != null) {
+                fullObject.close();
+            }
+            if (objectPortion != null) {
+                objectPortion.close();
+            }
+            if (headerOverrideObject != null) {
+                headerOverrideObject.close();
+            }
+        }
     }
 }

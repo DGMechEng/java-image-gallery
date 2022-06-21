@@ -108,7 +108,9 @@ public class imageRoutes {
 	try{
 	UserDAO dao = Postgres.getUserDAO();
 	list = dao.getImageLinks(username);
-
+	for(String s: list) {
+	    S3Intfc.fromS3(s);
+	}
 	} catch (Exception ex) {
 	    ex.printStackTrace();
 	}
