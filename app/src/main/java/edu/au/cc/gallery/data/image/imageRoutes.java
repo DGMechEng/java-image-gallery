@@ -102,27 +102,30 @@ public class imageRoutes {
             res.redirect("/login");
             halt();
 	}
-	Map<String, Object> model = new HashMap<String, Object>();
+	//go to database and get uuids
+
 	List<String> uuidlist = new ArrayList<String>();
-	List<File> flist = new ArrayList<File>();
 	String username = req.session().attribute("user");
 	try{
 	UserDAO dao = Postgres.getUserDAO();
 	uuidlist = dao.getImageLinks(username);
-	for(String s: uuidlist) {
-	    S3download s3 = new S3download();
-	    flist.add(s3.download(s));
-	    //	    S3Intfc.fromS3(s);
-	}
 	} catch (Exception ex) {
 	    ex.printStackTrace();
 	}
 	model.put("name", username);
-	model.put("imageID", flist);
+	model.put("imageID", uuidlist);
 
 	return new HandlebarsTemplateEngine()
 	  .render(new ModelAndView(model, "images.hbs"));
 	//		return "";
+    }
+
+    public void getImage(Request req, Response res) {
+	String uuid = req.params(":uuid");
+
+	byte[] data = new S3Intfc().download(uuid);
+	res.body(data);
+	res.type("image/jpg");
     }
     
     public void addRoutes() {
@@ -132,6 +135,7 @@ public class imageRoutes {
 	post("/upload", (req, res) -> upload(req, res));
 	get("/view", (req, res) -> getImages(req, res));
 	get("/debugSession", (req, res) -> debugSession(req, res));
+	get("/getImage/:uuid", (req, res) -> getImage(req, res));
     }
 
     private static void logInfo(Request req, Path tempFile) throws IOException, ServletException {
