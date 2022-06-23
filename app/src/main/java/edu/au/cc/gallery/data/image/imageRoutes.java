@@ -102,13 +102,15 @@ public class imageRoutes {
             res.redirect("/login");
             halt();
 	}
+	Map<String, Object> model = new HashMap<String, Object>();
+
 	//go to database and get uuids
 
 	List<String> uuidlist = new ArrayList<String>();
 	String username = req.session().attribute("user");
 	try{
-	UserDAO dao = Postgres.getUserDAO();
-	uuidlist = dao.getImageLinks(username);
+	    UserDAO dao = Postgres.getUserDAO();
+	    uuidlist = dao.getImageLinks(username);
 	} catch (Exception ex) {
 	    ex.printStackTrace();
 	}
@@ -120,12 +122,13 @@ public class imageRoutes {
 	//		return "";
     }
 
-    public void getImage(Request req, Response res) {
-	String uuid = req.params(":uuid");
+  public byte[] getImage(Request req, Response res) {
+      String uuid = req.params(":uuid");
 
-	byte[] data = new S3Intfc().download(uuid);
-	res.body(data);
-	res.type("image/jpg");
+      byte[] data = new S3Intfc().download(uuid);
+      res.status(200);
+      res.type("image/jpeg");
+      return data;
     }
     
     public void addRoutes() {

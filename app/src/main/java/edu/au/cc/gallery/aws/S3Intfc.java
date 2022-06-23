@@ -10,7 +10,7 @@ import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.core.sync.*;
-
+import software.amazon.awssdk.core.BytesWrapper;
 
 //import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.AmazonServiceException;
@@ -89,18 +89,14 @@ public class S3Intfc {
     
     }
 
-        public byte[] download(String uuid) {
-	    GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key(uuid)
-                .build();
+    public byte[] download(String uuid) {
+	GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+	    .bucket(bucketName)
+	    .key(uuid)
+	    .build();
 	
-	    GetObjectResponse s3object = client.getObject(getObjectRequest).response();
-	    InputStream inputStream = s3object.ResponseStream;
-	    length = s3object.objectMetadata().contentLength();
-	    System.out.println("object length is: " + length);
-	    byte[] data = new byte[length];
-	    inputStream.read(data, 0, length);
-	    return data;
-	}
+	byte[] data = client.getObjectAsBytes(getObjectRequest).asByteArray();
+	System.out.println("object length is: " + data.length);
+	return data;
+    }
 }
