@@ -90,6 +90,7 @@ public class S3Intfc {
     }
 
     public byte[] download(String uuid) {
+	this.connect();
 	GetObjectRequest getObjectRequest = GetObjectRequest.builder()
 	    .bucket(bucketName)
 	    .key(uuid)
