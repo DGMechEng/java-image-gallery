@@ -1,4 +1,4 @@
-]<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Photo album for {{ name }}</title>
@@ -8,8 +8,11 @@
 <h1>Photo album for {{ name }}</h1>
 <ul>
   {{#imageID}}<li>
-    <a href="/getImage/{{ . }}"><img src="/getImage/{{ . }}">
-      style=width: 500px;></a>
+    <a href="/getImage/{{ . }}"><img src="/getImage/{{ . }}" style="width:200px">
+     </a>
+    <form action = "/deleteImage/{{ . }}" method="GET">
+      <input type = "submit" value = "Delete image" />
+    </form>
   </li>
   {{/imageID}}
 </ul>

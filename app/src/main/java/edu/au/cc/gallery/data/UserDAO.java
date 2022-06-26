@@ -19,4 +19,6 @@ public interface UserDAO {
     List<String> getImageLinks(String username) throws Exception;
 
     void addImageUUID(String username, String uuid) throws Exception;
+
+    void deleteImage(String uuid) throws Exception;
 }

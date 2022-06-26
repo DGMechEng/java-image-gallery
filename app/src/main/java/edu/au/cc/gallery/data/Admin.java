@@ -133,7 +133,7 @@ public class Admin {
     
     public void addRoutes() {
 	before("/admin/*", (req, res) -> checkAdmin(req, res));
-	before("/admin*", (req, res) -> checkAdmin(req, res));
+	before("/admin", (req, res) -> checkAdmin(req, res));
 	get("/admin", (req, res) -> admin(req, res));
 	get("/admin/updateUser/:username", (req, res) -> updateUser(req, res));
 	get("/admin/updateUser/admin/userUpdated/:username", (req, res) -> userUpdated(req, res));

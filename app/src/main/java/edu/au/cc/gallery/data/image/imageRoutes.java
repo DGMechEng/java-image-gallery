@@ -119,7 +119,6 @@ public class imageRoutes {
 
 	return new HandlebarsTemplateEngine()
 	  .render(new ModelAndView(model, "images.hbs"));
-	//		return "";
     }
 
   public byte[] getImage(Request req, Response res) {
@@ -130,6 +129,20 @@ public class imageRoutes {
       res.type("image/jpeg");
       return data;
     }
+
+    public String deleteImage(Request req, Response res) {
+        if (!isLoggedIn(req)){
+            res.redirect("/login");
+            halt();
+            }
+	try {
+	    UserDAO dao = Postgres.getUserDAO();
+	    dao.deleteImage(req.params(":uuid"));
+	} catch (Exception ex) {
+	    return "Error deleting image";
+	}
+	return "Deleted image";
+    }
     
     public void addRoutes() {
 	get("/login", (req, res) -> login(req,res));
@@ -139,6 +152,7 @@ public class imageRoutes {
 	get("/view", (req, res) -> getImages(req, res));
 	get("/debugSession", (req, res) -> debugSession(req, res));
 	get("/getImage/:uuid", (req, res) -> getImage(req, res));
+	get("/deleteImage/:uuid", (req, res) -> deleteImage(req, res));
     }
 
     private static void logInfo(Request req, Path tempFile) throws IOException, ServletException {

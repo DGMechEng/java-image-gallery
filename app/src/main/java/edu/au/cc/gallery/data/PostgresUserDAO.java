@@ -66,4 +66,8 @@ public class PostgresUserDAO implements UserDAO {
     public void addImageUUID(String username, String uuid) throws SQLException {
 	connection.execute("insert into images (username, image_key) values (?,?)", new String[] {username, uuid});
     }
+
+    public void deleteImage(String uuid) throws SQLException {
+	connection.execute("delete from images where image_key=?", new String[]{uuid});
+    }
 }
