@@ -121,8 +121,7 @@ public class Admin {
 	try {
 	    UserDAO dao = Postgres.getUserDAO();
 	    User u = dao.getUser(username);
-	    System.out.println("The admin value for user " + u + " is " + u.getAdmin());
-	    return (u.getAdmin()=="admin");
+	    return (u.getAdmin().equals("admin"));
 	} catch (SQLException sx) {
             sx.printStackTrace();
         } catch (Exception e) {
