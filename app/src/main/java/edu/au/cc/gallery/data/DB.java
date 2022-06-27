@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 public class DB {
 
-    private static final String dbUrl = "jdbc:postgresql://m5-db-instance.c3n5o7gpctqm.us-west-2.rds.amazonaws.com/";
+    private String dbUrl;// = "jdbc:postgresql://m5-db-instance.c3n5o7gpctqm.us-west-2.rds.amazonaws.com/";
     private Connection connection;
 
     private JSONObject getSecret(){
@@ -27,7 +27,12 @@ public class DB {
 	return new JSONObject(s);
     }
 
+    private String getDBUrl(JSONObject secret) {
+	return "jdbc:postgresql://"+secret.getString("host")+"/";
+    }
+    
     private String getPassword(JSONObject secret) {
+	System.out.println(secret.getString("password"));
 	return secret.getString("password");
     }
     
@@ -35,7 +40,7 @@ public class DB {
 	try {
 	    Class.forName("org.postgresql.Driver");
 	    JSONObject secret = getSecret();
-	    connection = DriverManager.getConnection(dbUrl, "image_gallery", getPassword(secret));
+	    connection = DriverManager.getConnection(getDBUrl(secret), "image_gallery", getPassword(secret));
 	} catch (ClassNotFoundException ex) {
 	    ex.printStackTrace();
 	    System.exit(1);
