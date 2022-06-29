@@ -32,7 +32,6 @@ public class DB {
     }
     
     private String getPassword(JSONObject secret) {
-	System.out.println(secret.getString("password"));
 	return secret.getString("password");
     }
     
