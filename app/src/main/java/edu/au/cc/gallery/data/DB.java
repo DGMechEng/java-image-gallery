@@ -19,27 +19,27 @@ import org.json.JSONObject;
 
 public class DB {
 
-    private String dbUrl;// = "jdbc:postgresql://m5-db-instance.c3n5o7gpctqm.us-west-2.rds.amazonaws.com/";
+    private String dbUrl=System.getenv("PG_HOST");
     private Connection connection;
 
-    private JSONObject getSecret(){
-	String s = Secrets.getSecretImageGallery();
-	return new JSONObject(s);
-    }
-
-    private String getDBUrl(JSONObject secret) {
-	return "jdbc:postgresql://"+secret.getString("host")+"/";
-    }
-    
-    private String getPassword(JSONObject secret) {
-	return secret.getString("password");
+    private String getPassword() {
+	try {
+	File f = new File(system.getenv("IG_PASSWD_FILE"));
+	Scanner s = new Scanner(myObj);
+	if(s.hasNextLine()) {
+	    return s.nextLine();
+	}
+	} catch(FileNotFoundException fnx) {
+	    System.out.println("Not able to get db password");
+	    fnx.printStackTrace();
+	}
     }
     
     public void connect() throws SQLException {
 	try {
 	    Class.forName("org.postgresql.Driver");
-	    JSONObject secret = getSecret();
-	    connection = DriverManager.getConnection(getDBUrl(secret), "image_gallery", getPassword(secret));
+	    
+	    connection = DriverManager.getConnection(getDBUrl, getenv("IG_DATABASE"), getPassword());
 	} catch (ClassNotFoundException ex) {
 	    ex.printStackTrace();
 	    System.exit(1);

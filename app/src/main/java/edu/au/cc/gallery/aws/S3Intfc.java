@@ -12,7 +12,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.core.sync.*;
 import software.amazon.awssdk.core.BytesWrapper;
 
-//import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
@@ -20,7 +19,6 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-//import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -39,7 +37,7 @@ import java.util.UUID;
 public class S3Intfc {
     private static final Region region = Region.US_WEST_2;
     private S3Client client;
-    private static final String bucketName = "m5-images-bucket";
+    private static final String bucketName = System.getenv("S3_IMAGE_BUCKET");
     
     public void connect() {
 	client = S3Client.builder().region(region).build();
