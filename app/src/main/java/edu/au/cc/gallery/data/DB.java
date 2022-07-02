@@ -3,6 +3,8 @@ package edu.au.cc.gallery.data;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.File;
 
 import java.sql.DriverManager;
 import java.sql.Connection;
@@ -16,6 +18,7 @@ import edu.au.cc.gallery.aws.Secrets;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Scanner;
 
 public class DB {
 
@@ -24,8 +27,8 @@ public class DB {
 
     private String getPassword() {
 	try {
-	File f = new File(system.getenv("IG_PASSWD_FILE"));
-	Scanner s = new Scanner(myObj);
+	File f = new File(System.getenv("IG_PASSWD_FILE"));
+	Scanner s = new Scanner(f);
 	if(s.hasNextLine()) {
 	    return s.nextLine();
 	}
@@ -33,13 +36,14 @@ public class DB {
 	    System.out.println("Not able to get db password");
 	    fnx.printStackTrace();
 	}
+	return "Password not retrieved";
     }
     
     public void connect() throws SQLException {
 	try {
 	    Class.forName("org.postgresql.Driver");
 	    
-	    connection = DriverManager.getConnection(getDBUrl, getenv("IG_DATABASE"), getPassword());
+	    connection = DriverManager.getConnection(dbUrl, System.getenv("IG_DATABASE"), getPassword());
 	} catch (ClassNotFoundException ex) {
 	    ex.printStackTrace();
 	    System.exit(1);
