@@ -22,7 +22,7 @@ import java.util.Scanner;
 
 public class DB {
 
-    private String dbUrl=System.getenv("PG_HOST");
+    private String dbUrl="jdbc:postgresql://"+System.getenv("PG_HOST")+"/";
     private Connection connection;
 
     private String getPassword() {
