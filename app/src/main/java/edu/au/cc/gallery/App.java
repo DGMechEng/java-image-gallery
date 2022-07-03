@@ -29,18 +29,7 @@ public class App {
       else
 	  port(Integer.parseInt(portString));
       
-      //System.out.println(new App().getGreeting());
-      //S3.demo();
-      //      UserAdmin.prompt();
-
-      //M3 stuff
-      //      port(5000);
-
-      DB db = new DB();
-      db.connect();
-      UserDAO dao = Postgres.getUserDAO();
-      System.out.println(dao.getUsers());
-            new Admin().addRoutes();
-	    new imageRoutes().addRoutes();      
+      new Admin().addRoutes();
+      new imageRoutes().addRoutes();      
   }
 }

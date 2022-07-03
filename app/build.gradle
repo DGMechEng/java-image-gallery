@@ -18,7 +18,7 @@ shadowJar {
 zip64 true
 }
 run.doFirst {
-environment 'JETTY_PORT', '5555'
+environment 'JETTY_PORT', '8888'
 }
 
 run {
