@@ -71,7 +71,7 @@ public class imageRoutes {
 	    res.redirect("/login");
 	    halt();
 	    }
-	File uploadDir = new File(System.getenv(UPLOAD_PATH));
+	File uploadDir = new File(System.getenv("UPLOAD_PATH"));
 	uploadDir.mkdir();
 
 	Path tempFile;	

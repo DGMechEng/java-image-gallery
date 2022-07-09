@@ -30,6 +30,7 @@ public class DB {
 	File f = new File(System.getenv("IG_PASSWD_FILE"));
 	Scanner s = new Scanner(f);
 	if(s.hasNextLine()) {
+	   
 	    return s.nextLine();
 	}
 	} catch(FileNotFoundException fnx) {
@@ -42,7 +43,6 @@ public class DB {
     public void connect() throws SQLException {
 	try {
 	    Class.forName("org.postgresql.Driver");
-	    
 	    connection = DriverManager.getConnection(dbUrl, System.getenv("IG_DATABASE"), getPassword());
 	} catch (ClassNotFoundException ex) {
 	    ex.printStackTrace();
