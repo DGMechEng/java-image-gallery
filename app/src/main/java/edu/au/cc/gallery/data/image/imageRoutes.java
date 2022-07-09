@@ -71,9 +71,9 @@ public class imageRoutes {
 	    res.redirect("/login");
 	    halt();
 	    }
-	File uploadDir = new File("/home/ec2-user/java-image-gallery/app/src/main/java/edu/au/cc/gallery/upload");
+	File uploadDir = new File(System.getenv(UPLOAD_PATH));
 	uploadDir.mkdir();
-	//StaticFiles.externalLocation("/home/ec2-user/java-image-gallery/app/src/main/java/edu/au/cc/gallery/upload");
+
 	Path tempFile;	
 	try{
 	    String username = req.session().attribute("user");
@@ -86,7 +86,8 @@ public class imageRoutes {
 	    S3Intfc.toS3(tempFile, uuid);
 	    UserDAO dao = Postgres.getUserDAO();
 	    dao.addImageUUID(username, uuid);
-	    return "<h1>You uploaded this image:<h1><img src='" + tempFile.getFileName() + "'>";
+	    Files.deleteIfExists(tempFile);
+	    return "<h1>You uploaded an image</h1>";
 	} catch (IOException ix) {
 	    ix.printStackTrace();
 	} catch (ServletException sx) {
