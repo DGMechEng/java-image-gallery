@@ -144,6 +144,10 @@ public class imageRoutes {
 	}
 	return "Deleted image";
     }
+
+    public String getHealth(Request req, Response res) {
+	return "ok";
+    }
     
     public void addRoutes() {
 	get("/login", (req, res) -> login(req,res));
@@ -154,6 +158,7 @@ public class imageRoutes {
 	get("/debugSession", (req, res) -> debugSession(req, res));
 	get("/getImage/:uuid", (req, res) -> getImage(req, res));
 	get("/deleteImage/:uuid", (req, res) -> deleteImage(req, res));
+	get("/health", (req, res) -> getHealth(req, res));
     }
 
     private static void logInfo(Request req, Path tempFile) throws IOException, ServletException {
